@@ -12,8 +12,10 @@
 
 5) Добавить нумерацию выведенных фильмов */
 
-'use strict';
-const adv = document.querySelectorAll('.promo__adv');
+const adv = document.querySelectorAll('.promo__adv img'),
+  poster = document.querySelector('.promo__bg'),
+  genre = poster.querySelector('.promo__genre');
+
 const movieDB = {
   movies: [
     'Логан',
@@ -26,3 +28,11 @@ const movieDB = {
 adv.forEach((el) => {
   el.remove();
 });
+genre.textContent = 'Драма';
+// films.forEach((c) => {
+//   for (let i = 0; i <= c.length; i++) {
+//     c[i].replaceWith(movieDB.movies[i]);
+//   }
+// });
+
+poster.style.backgroundImage = 'url("img/bg.jpg")';
