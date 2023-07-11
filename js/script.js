@@ -17,6 +17,22 @@
 //     c[i].replaceWith(movieDB.movies[i]);
 //   }
 // });
+/** / Задания на урок:
+
+1) Реализовать функционал, что после заполнения формы и нажатия кнопки "Подтвердить" - 
+новый фильм добавляется в список. Страница не должна перезагружаться.
+Новый фильм должен добавляться в movieDB.movies.
+Для получения доступа к значению input - обращаемся к нему как input.value;
+P.S. Здесь есть несколько вариантов решения задачи, принимается любой, но рабочий.
+
+2) Если название фильма больше, чем 21 символ - обрезать его и добавить три точки
+
+3) При клике на мусорную корзину - элемент будет удаляться из списка (сложно)
+
+4) Если в форме стоит галочка "Сделать любимым" - в консоль вывести сообщение: 
+"Добавляем любимый фильм"
+
+5) Фильмы должны быть отсортированы по алфавиту */
 
 document.addEventListener('DOMContentLoaded', () => {
   const movieDB = {
@@ -31,26 +47,55 @@ document.addEventListener('DOMContentLoaded', () => {
   const adv = document.querySelectorAll('.promo__adv img'),
     poster = document.querySelector('.promo__bg'),
     genre = poster.querySelector('.promo__genre'),
-    films = document.querySelector('.promo__interactive-list '),
-    addText = document.querySelector('form.add'),
-    addFilm = document.querySelector('button');
+    movieList = document.querySelector('.promo__interactive-list '),
+    addForm = document.querySelector('form.add'),
+    addInput = document.querySelector('.adding__input'),
+    checkbox = document.querySelector('[type="checkbox"]');
 
-  console.log(movieDB.movies);
-  adv.forEach((el) => {
-    el.remove();
-  });
-  genre.textContent = 'Драма';
-  poster.style.backgroundImage = 'url("img/bg.jpg")';
-  films.innerHTML = '';
-  movieDB.movies.sort();
-  movieDB.movies.forEach((item, i) => {
-    films.innerHTML += `<li class="promo__interactive-item">
-	${i + 1} ${item}
-	<div class="delete"></div>
-</li>`;
+  addForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    let newFilm = addInput.value;
+    if (newFilm) {
+      if (newFilm.length > 21) {
+        newFilm = `${newFilm.substring(0, 22)}...`;
+      }
+      movieDB.movies.push(newFilm);
+      sortArr(movieDB.movies);
+      createMovieList(movieDB.movies, movieList);
+    }
+    const favorite = checkbox.checked;
+
+    event.target.reset();
   });
 
-  addFilm.addEventListener('click', () => {
-    movieDB.movies.push(addText.value);
-  });
+  const deleteAdv = (arr) => {
+    arr.forEach((item) => {
+      item.remove();
+    });
+  };
+
+  const makeChanges = () => {
+    genre.textContent = 'Драма';
+    poster.style.backgroundImage = 'url("img/bg.jpg")';
+  };
+
+  const sortArr = (arr) => {
+    arr.sort();
+  };
+
+  function createMovieList(films, parent) {
+    parent.innerHTML = '';
+
+    films.forEach((item, i) => {
+      parent.innerHTML += `<li class="promo__interactive-item">
+		${i + 1} ${item}
+		<div class="delete"></div>
+	</li>`;
+    });
+  }
+  deleteAdv(adv);
+  makeChanges();
+  sortArr(movieDB.movies);
+  createMovieList(movieDB.movies, movieList);
 });
